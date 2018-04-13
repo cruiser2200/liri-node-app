@@ -6,7 +6,7 @@ require('dotenv').config();
 
 var Twitter = require('twitter');
 var Spotify = require('node-spotify-api');
-
+// var randomText = require('./random.txt');
 // Add the code required to import the `keys.js` file and store it in a variable.
 
 var keys = require("./keys.js");
@@ -17,18 +17,25 @@ var spotify = new Spotify(keys.spotify);
 var client = new Twitter(keys.twitter);
 var fs = require('fs');
 
- 
-// console.log(result.parsed)
-
-
-// var request = require('request');
-// var Twitter = require('twitter');
-// var Spotify = require('node-spotify-api');
-// var fs = require('fs');
-// var client = new Twitter(keys.twitterKeys);
 var input = process.argv;
 var action = input[2];
 var inputs = input[3];
+
+
+
+//Stored argument's array
+var nodeArgv = process.argv;
+var command = process.argv[2];
+//movie or song
+var x = "";
+//attaches multiple word arguments
+for (var i=3; i<nodeArgv.length; i++){
+  if(i>3 && i<nodeArgv.length){
+    x = x + "+" + nodeArgv[i];
+  } else{
+    x = x + nodeArgv[i];
+  }
+}
 
 switch (action) {
 	case "my-tweets":
@@ -40,7 +47,7 @@ switch (action) {
     break;
     
     case "movie-this":
-    omdb(inputs);
+    movie(inputs);
     break;
 
     case "do-what-it-says":
@@ -90,7 +97,7 @@ function spotify(inputs) {
 
 function movie(inputs) {
 
-	var queryUrl = "http://www.omdbapi.com/?t=" + inputs + "&y=&plot=short&apikey=40e9cece";
+	var queryUrl = "http://www.omdbapi.com/?t=" + inputs + "&y=&plot=short&apikey=527ba01";
 
 	request(queryUrl, function(error, response, body) {
 		if (!inputs){
@@ -110,7 +117,8 @@ function movie(inputs) {
 	});
 };
 
-function doit() {
+function doThing() {
+    var randomText = require('./random.txt');
 	fs.readFile('random.txt', "utf8", function(error, data){
 
 		if (error) {
@@ -120,13 +128,13 @@ function doit() {
 		// Then split it by commas (to make it more readable)
 		var dataArr = data.split(",");
 
-		// Each command is represented. Because of the format in the txt file, remove the quotes to run these commands. 
+		// Each command is represented. Because of the .txt file format, remove the quotes to run these commands. 
 		if (dataArr[0] === "spotify-this") {
-			var songcheck = dataArr[1].slice(1, -1);
-			spotify(songcheck);
+			var songCheck = dataArr[1].slice(1, -1);
+			spotify(songCheck);
 		} else if (dataArr[0] === "my-tweets") {
-			var tweetname = dataArr[1].slice(1, -1);
-			twitter(tweetname);
+			var tweetName = dataArr[1].slice(1, -1);
+			twitter(tweetName);
 		} 
 		
   	});
